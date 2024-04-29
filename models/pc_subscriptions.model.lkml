@@ -2,6 +2,7 @@ connection: "pc_subscriptions"
 
 # include all the views
 include: "/views/**/*.view.lkml"
+include: "/subscription_logs.view.lkml"
 
 datagroup: pc_subscriptions_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -9,6 +10,8 @@ datagroup: pc_subscriptions_default_datagroup {
 }
 
 persist_with: pc_subscriptions_default_datagroup
+
+explore: subscription_logs {}
 
 explore: customers {}
 
