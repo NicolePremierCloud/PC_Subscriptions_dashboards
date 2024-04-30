@@ -113,12 +113,33 @@ view: ranked_subscription_data {
       sql: ${TABLE}.percentage_change ;;
     }
 
-  measure: consolidated_new_datasource {
+  measure: sum_current_seats {
+    type: sum
+    sql: ${current_seats} ;;
+  }
+
+  measure: sum_change_in_seats_absolute {
+    type: sum
+    sql: ${change_in_seats_absolute} ;;
+  }
+
+  measure: sum_change_in_seats {
+    type: sum
+    sql: ${change_in_seats} ;;
+  }
+
+  measure: sum_previous_seats {
+    type: sum
+    sql: ${previous_seats} ;;
+  }
+
+  measure: consolidated_change {
     type: number
     sql: CASE
-          WHEN SUM(${current_seats}) = 0 AND SUM(${change_in_seats_absolute}) != 0 THEN -1
-          ELSE (SUM(${change_in_seats}) / SUM(${current_seats}))
-        END ;;
+    WHEN ${sum_current_seats} = 0 AND ${sum_change_in_seats_absolute} != 0 THEN -1
+    WHEN ${sum_current_seats} = 0 AND $(${sum_previous_seats} THEN 0 -- Handle division by zero when sum_current_seats is zero
+    ELSE (${sum_change_in_seats} / ${sum_current_seats})
+    END ;;
   }
 
     set: detail {
